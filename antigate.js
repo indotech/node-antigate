@@ -85,7 +85,7 @@ Antigate.prototype.report = function (id, callback) {
         if (error) {
             callback(error);
         } else {
-            if (body.indexOf('OK') === 0) {
+            if (body && body.indexOf('OK') === 0) {
                 callback(null);
             } else {
                 callback(new Error(body));
@@ -104,8 +104,8 @@ Antigate.prototype.upload = function (body, callback) {
     }, function (error, response, body) {
         if (typeof callback !== 'function') return;
 
-        if (body.indexOf('OK') === 0) {
-            callback(null, body.split('|')[1]);
+        if (body && body.indexOf('OK') === 0) {
+            callback(null, body && body.split('|')[1]);
         } else {
             callback(new Error(body), null);
         }
@@ -123,8 +123,8 @@ Antigate.prototype.uploadWithComment = function (body, comment, callback) {
     }, function(error, response, body) {
         if (typeof callback !== 'function') return;
 
-        if (body.indexOf('OK') === 0) {
-            callback(null, body.split('|')[1]);
+        if (body && body.indexOf('OK') === 0) {
+            callback(null, body && body.split('|')[1]);
         } else {
             callback(new Error(body), null);
         }
@@ -142,8 +142,8 @@ Antigate.prototype.check = function (id, callback) {
         if (error) {
             callback(error, null);
         } else {
-            if (body.indexOf('OK') === 0) {
-                callback(null, body.split('|')[1]);
+            if (body && body.indexOf('OK') === 0) {
+                callback(null, body && body.split('|')[1]);
             } else {
                 if (body === 'CAPCHA_NOT_READY') {
                     setTimeout(function () {
@@ -184,7 +184,7 @@ Antigate.prototype.readCaptcha = function (path, callback) {
 Antigate.prototype.loadCaptcha = function (url, callback) {
     return request.get(url, {encoding: null}, function (error, response, body) {
         if (!error && response.statusCode === 200) {
-            callback(null, body.toString('base64'));
+            callback(null, body && body.toString('base64'));
         } else {
             callback(error, null);
         }
